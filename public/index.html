@@ -1,0 +1,75 @@
+<html>
+<head>
+    <title>Sockets</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type ="text/javascript">
+
+        $(document). ready(function (){
+    
+            var socket = io(); //1
+
+        socket.on('newuser', function(data) {
+          $('#res').html(`<div class='resu'>The button has been clicked <span>${data.counter}</span> time(s)!</div>`);
+        });
+    
+        $('#form').submit(function(e){
+            e.preventDefault();
+            socket.emit('count_add');
+            });
+
+        socket.on('counter',function(msg){
+            console.log(msg);
+            var html_str="";
+                html_str="<div class='resu'>The button has been clicked <span>"+msg.response+"</span>time(s)</div>"
+                console.log(html_str);
+            $('#res').html(html_str);   
+         });
+
+        $('#form2').submit(function(e){
+            e.preventDefault();
+            socket.emit('reset');
+        });
+
+        socket.on('reset_count', function(data){
+            console.log("here i am ")
+          $('#res').html("<div class='resu'>The button has been clicked <span> "+data.counter+"</span>time(s)</div>");
+         });
+
+         })
+    </script>
+    <style>
+        .resu{
+            align-self:center;
+            border: 3px solid black;
+            padding:5px;
+            width:300px;
+            margin-left:460px;
+        }
+        .container{
+            align-self:center;
+            border: 3px solid black;
+            padding:5px;
+            width:300px;
+            margin-left:460px;
+        }
+        h2{
+            text-align:center;
+        }
+    </style>
+</head>
+<body>
+        <h2>Dojo Survey</h2>
+    <div id="res"> </div>
+    <div class="container">
+    <form id="form" action="" method="post">
+    <input type='submit' value='Epic Button'>
+    </form>
+    <form id="form2" action="" method="post">
+        <input type='submit' value='Reset'>
+        </form>
+</div> 
+</body>
+</html>
